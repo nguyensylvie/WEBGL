@@ -24,24 +24,14 @@ const Scene = {
 
 		Scene.customAnimation();
 
-		if (Scene.vars.goldGroup !== undefined) {
-			let intersects = Scene.vars.raycaster.intersectObjects(Scene.vars.goldGroup.children, true);
+		if (Scene.vars.group !== undefined) {
+			let intersects = Scene.vars.raycaster.intersectObjects(Scene.vars.group.children, true);
 
 			if (intersects.length > 0) {
 				Scene.vars.animSpeed = 0.05;
 			} else {
 				Scene.vars.animSpeed = -0.05;
 			}
-
-			// let mouse = new THREE.Vector3(Scene.vars.mouse.x, Scene.vars.mouse.y, 0);
-			// mouse.unproject(Scene.vars.camera);
-
-			// let ray = new THREE.Raycaster(Scene.vars.camera.position, mouse.sub(Scene.vars.camera.position).normalize()); 
-			// let intersects = ray.intersectObjects(Scene.vars.goldGroup.children, true);
-			// if(intersects.length > 0) {
-			// 	var arrow = new THREE.ArrowHelper(ray.ray.direction, ray.ray.origin, 1000, 0xFF00000);
-			// 	Scene.vars.scene.add(arrow);
-			// }
 		}
 
 		Scene.render();
@@ -68,29 +58,33 @@ const Scene = {
 			return;
 		}
 
-		if (vars.animPercent <= 0.33) {
-			Scene.vars.plaquette.position.z = 45 + (75 * vars.animPercent);
-			Scene.vars.texte.position.z = 45 + (150 * vars.animPercent);
-		}
+		// if (vars.animPercent <= 0.33) {
+		// 	Scene.vars.plaquette.position.z = 45 + (75 * vars.animPercent);
+		// 	Scene.vars.texte.position.z = 45 + (150 * vars.animPercent);
+		// }
 
-		if (vars.animPercent >= 0.20 && vars.animPercent <= 0.75) {
-			let percent = (vars.animPercent - 0.2) / 0.55;
-			vars.socle1.position.x = 25 * percent;
-			vars.socle2.position.x = -25 * percent;
-			vars.logo.position.x = 45 + 50 * percent;
-			vars.logo2.position.x = -45 - 50 * percent;
+		// if (vars.animPercent >= 0.20 && vars.animPercent <= 0.75) {
+		// 	let percent = (vars.animPercent - 0.2) / 0.55;
+		// 	vars.socle1.position.x = 25 * percent;
+		// 	vars.socle2.position.x = -25 * percent;
+		// 	vars.logo.position.x = 45 + 50 * percent;
+		// 	vars.logo2.position.x = -45 - 50 * percent;
+		// } else if (vars.animPercent < 0.20) {
+		// 	vars.socle1.position.x = 0;
+		// 	vars.socle2.position.x = 0;
+		// 	vars.logo.position.x = 45;
+		// 	vars.logo2.position.x = -45;
+		// }
+
+		if (vars.animPercent >= 0.20 && vars.animPercent <= 0.55) {
+			let percent =  (vars.animPercent - 0.2) / 0.55;
+			vars.apple2.position.y = -5 * percent;
+			vars.apple3.position.y = 10 * percent;
+			vars.apple4.position.y = 10 * percent;
 		} else if (vars.animPercent < 0.20) {
-			vars.socle1.position.x = 0;
-			vars.socle2.position.x = 0;
-			vars.logo.position.x = 45;
-			vars.logo2.position.x = -45;
-		}
-
-		if (vars.animPercent >= 0.40) {
-			let percent = (vars.animPercent - 0.4) / 0.6;
-			vars.statuette.position.y = 50 * percent;
-		} else if (vars.animPercent < 0.70) {
-			vars.statuette.position.y = 0;
+			vars.apple2.position.y = 200;
+			vars.apple3.position.y = 150;
+			vars.apple4.position.y = 180;
 		}
 	},
 	loadFBX: (file, scale, position, rotation, color, namespace, callback) => {
@@ -114,7 +108,7 @@ const Scene = {
 						});
 					}
 
-					if (namespace === "statuette") {
+					if (namespace === "deer") {
 						child.material = new THREE.MeshStandardMaterial({
 							color: new THREE.Color(color),
 							roughness: .3,
@@ -217,7 +211,7 @@ const Scene = {
 
 		// ajout de la caméra
 		vars.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
-		vars.camera.position.set(-1.5, 210, 572);
+		vars.camera.position.z = (-1.5, 210, 572);
 
 		// ajout de la lumière
 		const lightIntensityHemisphere = .5;
@@ -300,11 +294,17 @@ const Scene = {
 
 		// ajout de la sphère
 		let geometry = new THREE.SphereGeometry(1000, 32, 32);
-		let material = new THREE.MeshPhongMaterial({color: new THREE.Color(0xFFFFFF),
-													map: new THREE.ImageUtils.loadTexture('/texture/sky.jpg')});
+		let material = new THREE.MeshPhongMaterial({map: new THREE.ImageUtils.loadTexture('/texture/sky.jpg')});
 		material.side = THREE.DoubleSide;
 		let sphere = new THREE.Mesh(geometry, material);
 		vars.scene.add(sphere);
+
+		// ajout de la sphere lava
+		var geometry1 = new THREE.SphereGeometry(150, 32, 32);
+		var material1 = new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture('/texture/lava.jpg'), overdraw: true});
+		let lava = new THREE.Mesh(geometry1, material1);
+		lava.position.set(200, 350, -1000);
+		vars.scene.add(lava);
 
 		vars.texture = new THREE.TextureLoader().load('./texture/marbre.jpg');
 
@@ -359,6 +359,7 @@ const Scene = {
 				trees.add(apple4);
 				
 				vars.scene.add(trees);
+				vars.group = trees;
 			});
 		});
 
@@ -379,27 +380,9 @@ const Scene = {
 			});
 			vars.scene.add(airBalloon);
 		});
-
-		Scene.loadFBX("deer.FBX", 0.1, [30, 10, 40], [0, 90, 46], 0x694D15, "deer", () => {
-			let vars = Scene.vars;
-
-			let cerf = new THREE.Group();
-			cerf.position.set(-200, 0, 0);
-			cerf.add(vars.deer);
-			cerf.traverse(node => {
-			if (node.isMesh) {
-				node.material = new THREE.MeshStandardMaterial({
-					color: new THREE.Color(0x694D15),
-					metalness: .1,
-					roughness: .2
-				})
-			}
-			});
-			vars.scene.add(cerf);
-		});
 		
 		Scene.loadFBX("Logo_Feelity.FBX", 10, [45, 22, 0], [0, 0, 0], 0xFFFFFF, 'logo', () => {
-			Scene.loadFBX("Statuette.FBX", 10, [0, 0, 0], [0, 0, 0], 0xFFD700, 'statuette', () => {
+			Scene.loadFBX("deer.FBX", 0.1, [1, 60, 10], [0, 50, 45.5], 0x694D15, 'deer', () => {
 				Scene.loadFBX("Socle_Partie1.FBX", 10, [0, 0, 0], [0, 0, 0], 0x1A1A1A, 'socle1', () => {
 					Scene.loadFBX("Socle_Partie2.FBX", 10, [0, 0, 0], [0, 0, 0], 0x1A1A1A, 'socle2', () => {
 						Scene.loadFBX("Plaquette.FBX", 10, [0, 4, 45], [0, 0, 0], 0xFFFFFF, 'plaquette', () => {
@@ -410,7 +393,7 @@ const Scene = {
 								let gold = new THREE.Group();
 								gold.add(vars.socle1);
 								gold.add(vars.socle2);
-								gold.add(vars.statuette);
+								gold.add(vars.deer);
 								gold.add(vars.logo);
 								gold.add(vars.texte);
 								gold.add(vars.plaquette);

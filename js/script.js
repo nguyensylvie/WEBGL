@@ -94,7 +94,6 @@ const Scene = {
 		}
 	},
 	loadFBX: (file, scale, position, rotation, color, namespace, callback) => {
-		let vars = Scene.vars;
 		let loader = new FBXLoader();
 
 		if (file === undefined) {
@@ -275,7 +274,7 @@ const Scene = {
 		let mesh = new THREE.Mesh(
 			new THREE.PlaneBufferGeometry(2000, 2000),
 			new THREE.MeshLambertMaterial(
-				{ color: new THREE.Color(0x65BA30),
+				{ color: new THREE.Color(0x5B820C),
 				  map: new THREE.ImageUtils.loadTexture('/texture/grass.jpg') }
 			)
 		);
@@ -315,6 +314,90 @@ const Scene = {
 			Scene.vars.text = decodeURI(text);
 		}
 
+		Scene.loadFBX("Tree low.FBX", 2, [0, 0, 20], [0, 0, 0], 0xFFD700, "tree", () => {
+			Scene.loadFBX("apple.FBX", 0.1, [0, 0, 0], [0, 0, 20], 0xF10202, "apple", () => {
+				let vars = Scene.vars;
+
+				let trees = new THREE.Group();
+				trees.add(vars.tree);
+				trees.add(vars.apple);
+
+				trees.position.set(200, 0, 0);
+				trees.rotation.y = -Math.PI / 4;
+				trees.children[0].traverse(node => {
+					if (node.isMesh) {
+						node.material = new THREE.MeshStandardMaterial({
+							color: new THREE.Color(0x9EDD20),
+							metalness: .2,
+							roughness: .3
+						})
+					}
+				});
+
+				let apple2 = vars.apple.clone();
+				apple2.rotation.z = 45;
+				apple2.position.x = 15;
+				apple2.position.y = 200;
+				apple2.position.z = 95;
+				vars.apple2 = apple2;
+				trees.add(apple2);
+
+				let apple3 = vars.apple.clone();
+				apple3.rotation.z = 15;
+				apple3.position.x = 55;
+				apple3.position.y = 150;
+				apple3.position.z = 30;
+				vars.apple3 = apple3;
+				trees.add(apple3);
+
+				let apple4 = vars.apple.clone();
+				apple4.rotation.z = 35;
+				apple4.position.x = -40;
+				apple4.position.y = 180;
+				apple4.position.z = -40;
+				vars.apple4 = apple4;
+				trees.add(apple4);
+				
+				vars.scene.add(trees);
+			});
+		});
+
+		Scene.loadFBX("Air_Balloon.FBX", 0.1, [0, 0, 0], [0, 0, 0], 0xFABB3E, "balloon", () => {
+			let vars = Scene.vars;
+
+			let airBalloon = new THREE.Group();
+			airBalloon.position.set(-400, 250, -700);
+			airBalloon.add(vars.balloon);
+			airBalloon.traverse(node => {
+			if (node.isMesh) {
+				node.material = new THREE.MeshStandardMaterial({
+					color: new THREE.Color(0xFABB3E),
+					metalness: .2,
+					roughness: .3
+				})
+			}
+			});
+			vars.scene.add(airBalloon);
+		});
+
+		Scene.loadFBX("deer.FBX", 0.1, [30, 10, 40], [0, 90, 46], 0x694D15, "deer", () => {
+			let vars = Scene.vars;
+
+			let cerf = new THREE.Group();
+			cerf.position.set(-200, 0, 0);
+			cerf.add(vars.deer);
+			cerf.traverse(node => {
+			if (node.isMesh) {
+				node.material = new THREE.MeshStandardMaterial({
+					color: new THREE.Color(0x694D15),
+					metalness: .1,
+					roughness: .2
+				})
+			}
+			});
+			vars.scene.add(cerf);
+		});
+		
 		Scene.loadFBX("Logo_Feelity.FBX", 10, [45, 22, 0], [0, 0, 0], 0xFFFFFF, 'logo', () => {
 			Scene.loadFBX("Statuette.FBX", 10, [0, 0, 0], [0, 0, 0], 0xFFD700, 'statuette', () => {
 				Scene.loadFBX("Socle_Partie1.FBX", 10, [0, 0, 0], [0, 0, 0], 0x1A1A1A, 'socle1', () => {
@@ -341,36 +424,6 @@ const Scene = {
 								gold.position.y = 10;
 								vars.scene.add(gold);
 								vars.goldGroup = gold;
-
-								let silver = gold.clone();
-								silver.position.set(-200, 10, 0);
-								silver.rotation.y = Math.PI / 4;
-								silver.children[2].traverse(node => {
-									if (node.isMesh) {
-										node.material = new THREE.MeshStandardMaterial({
-											color: new THREE.Color(0xC0C0C0),
-											metalness: .6,
-											roughness: .3
-										})
-									}
-								});
-								vars.scene.add(silver);
-								vars.silverGroup = silver;
-
-								let bronze = gold.clone();
-								bronze.position.set(200, 10, 0);
-								bronze.rotation.y = -Math.PI / 4;
-								bronze.children[2].traverse(node => {
-									if (node.isMesh) {
-										node.material = new THREE.MeshStandardMaterial({
-											color: new THREE.Color(0xCD7F32),
-											metalness: .6,
-											roughness: .3
-										})
-									}
-								});
-								vars.scene.add(bronze);
-								vars.bronzeGroup = bronze;
 
 								let elem = document.querySelector('#loading');
 								elem.parentNode.removeChild(elem);

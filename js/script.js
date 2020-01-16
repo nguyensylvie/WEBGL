@@ -34,10 +34,23 @@ const Scene = {
 			}
 		}
 
+		//Pour la montgolfiere
+
+		// if (Scene.vars.group1 !== undefined) {
+		// 	let intersects1 = Scene.vars.raycaster.intersectObjects(Scene.vars.group1.children, true);
+
+		// 	if (intersects1.length > 0) {
+		// 		Scene.vars.animSpeed = 0.07;
+		// 	} else {
+		// 		Scene.vars.animSpeed = -0.07;
+		// 	}
+		// }
+
 		Scene.render();
 	},
 	render: () => {
 		// Animer la sphère lava (ne fonctionne pas aussi dans la méthode animate)
+
 		// requestAnimationFrame(Scene.render);
 		// lava.rotation.x += 0.01;
 		// lava.rotation.y += 0.02;
@@ -62,24 +75,7 @@ const Scene = {
 			return;
 		}
 
-		// if (vars.animPercent <= 0.33) {
-		// 	Scene.vars.plaquette.position.z = 45 + (75 * vars.animPercent);
-		// 	Scene.vars.texte.position.z = 45 + (150 * vars.animPercent);
-		// }
-
-		// if (vars.animPercent >= 0.20 && vars.animPercent <= 0.75) {
-		// 	let percent = (vars.animPercent - 0.2) / 0.55;
-		// 	vars.socle1.position.x = 25 * percent;
-		// 	vars.socle2.position.x = -25 * percent;
-		// 	vars.logo.position.x = 45 + 50 * percent;
-		// 	vars.logo2.position.x = -45 - 50 * percent;
-		// } else if (vars.animPercent < 0.20) {
-		// 	vars.socle1.position.x = 0;
-		// 	vars.socle2.position.x = 0;
-		// 	vars.logo.position.x = 45;
-		// 	vars.logo2.position.x = -45;
-		// }
-
+		//Anime les pommes qui tombent
 		if (vars.animPercent >= 0.20 && vars.animPercent <= 0.55) {
 			let percent =  (vars.animPercent - 0.2) / 0.55;
 			vars.apple2.position.y = 5 * percent;
@@ -92,6 +88,15 @@ const Scene = {
 			vars.apple4.position.y = 180;
 			vars.apple5.position.y = 165;
 		}
+
+		//Anime montgolfiere qui vole
+		
+		// if (vars.animPercent >= 0.40) {
+		// 	let percent = (vars.animPercent - 0.4) / 0.6;
+		// 	vars.airBalloon.position.y = 50 * percent;
+		// } else if (vars.animPercent < 0.70) {
+		// 	vars.airBalloon.position.y = 0;
+		// }
 	},
 	loadFBX: (file, scale, position, rotation, color, namespace, callback) => {
 		let loader = new FBXLoader();
@@ -309,6 +314,7 @@ const Scene = {
 			Scene.vars.text = decodeURI(text);
 		}
 
+		// ajout objet arbre et pommes
 		Scene.loadFBX("Tree low.FBX", 2, [0, 0, 20], [0, 0, 0], 0xFFD700, "tree", () => {
 			Scene.loadFBX("apple.FBX", 0.1, [0, 10, 0], [0, 0, 20], 0xF10202, "apple", () => {
 				let vars = Scene.vars;
@@ -366,8 +372,7 @@ const Scene = {
 			});
 		});
 
-
-
+		// ajout objet montgolfiere
 		Scene.loadFBX("Air_Balloon.FBX", 0.1, [0, 0, 0], [0, 0, 0], 0xFABB3E, "balloon", () => {
 			let vars = Scene.vars;
 
@@ -384,8 +389,10 @@ const Scene = {
 			}
 			});
 			vars.scene.add(airBalloon);
+			vars.group1 = airBalloon;
 		});
 		
+		// objet cerf et support
 		Scene.loadFBX("Logo_Feelity.FBX", 10, [45, 22, 0], [0, 0, 0], 0xFFFFFF, 'logo', () => {
 			Scene.loadFBX("deer.FBX", 0.1, [1, 60, 10], [0, 50, 45.5], 0x694D15, 'deer', () => {
 				Scene.loadFBX("Socle_Partie1.FBX", 10, [0, 0, 0], [0, 0, 0], 0x1A1A1A, 'socle1', () => {
@@ -426,10 +433,9 @@ const Scene = {
 		vars.controls = new OrbitControls(vars.camera, vars.renderer.domElement);
 		vars.controls.minDistance = 400;
 		vars.controls.maxDistance = 900;
-		// vars.controls.minPolarAngle = Math.PI / 4;
-		// vars.controls.maxPolarAngle = Math.PI / 2;
-		// vars.controls.minAzimuthAngle = - Math.PI / 4;
-		// vars.controls.maxAzimuthAngle = Math.PI / 4;
+		vars.controls.minPolarAngle = Math.PI / 4;
+		vars.controls.maxPolarAngle = Math.PI / 2;
+		vars.controls.minAzimuthAngle = - Math.PI / 4;
 		vars.controls.target.set(0, 100, 0);
 		vars.controls.update();
 

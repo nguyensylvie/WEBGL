@@ -78,13 +78,15 @@ const Scene = {
 
 		if (vars.animPercent >= 0.20 && vars.animPercent <= 0.55) {
 			let percent =  (vars.animPercent - 0.2) / 0.55;
-			vars.apple2.position.y = -5 * percent;
-			vars.apple3.position.y = 10 * percent;
-			vars.apple4.position.y = 10 * percent;
+			vars.apple2.position.y = 5 * percent;
+			vars.apple3.position.y = 35 * percent;
+			vars.apple4.position.y = 35 * percent;
+			vars.apple5.position.y = 25 * percent;
 		} else if (vars.animPercent < 0.20) {
 			vars.apple2.position.y = 200;
 			vars.apple3.position.y = 150;
 			vars.apple4.position.y = 180;
+			vars.apple5.position.y = 165;
 		}
 	},
 	loadFBX: (file, scale, position, rotation, color, namespace, callback) => {
@@ -212,6 +214,7 @@ const Scene = {
 		// ajout de la caméra
 		vars.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
 		vars.camera.position.z = (-1.5, 210, 572);
+		vars.camera.position.y = 100;
 
 		// ajout de la lumière
 		const lightIntensityHemisphere = .5;
@@ -300,10 +303,10 @@ const Scene = {
 		vars.scene.add(sphere);
 
 		// ajout de la sphere lava
-		var geometry1 = new THREE.SphereGeometry(150, 32, 32);
+		var geometry1 = new THREE.SphereGeometry(150, 25, 32);
 		var material1 = new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture('/texture/lava.jpg'), overdraw: true});
 		let lava = new THREE.Mesh(geometry1, material1);
-		lava.position.set(200, 350, -1000);
+		lava.position.set(200, 450, -1000);
 		vars.scene.add(lava);
 
 		vars.texture = new THREE.TextureLoader().load('./texture/marbre.jpg');
@@ -315,7 +318,7 @@ const Scene = {
 		}
 
 		Scene.loadFBX("Tree low.FBX", 2, [0, 0, 20], [0, 0, 0], 0xFFD700, "tree", () => {
-			Scene.loadFBX("apple.FBX", 0.1, [0, 0, 0], [0, 0, 20], 0xF10202, "apple", () => {
+			Scene.loadFBX("apple.FBX", 0.1, [0, 10, 0], [0, 0, 20], 0xF10202, "apple", () => {
 				let vars = Scene.vars;
 
 				let trees = new THREE.Group();
@@ -354,10 +357,18 @@ const Scene = {
 				apple4.rotation.z = 35;
 				apple4.position.x = -40;
 				apple4.position.y = 180;
-				apple4.position.z = -40;
+				apple4.position.z = -30;
 				vars.apple4 = apple4;
 				trees.add(apple4);
 				
+				let apple5 = vars.apple.clone();
+				apple5.rotation.z = 90;
+				apple5.position.x = -30;
+				apple5.position.y = 165;
+				apple5.position.z = 85;
+				vars.apple5 = apple5;
+				trees.add(apple5);
+
 				vars.scene.add(trees);
 				vars.group = trees;
 			});
@@ -390,23 +401,23 @@ const Scene = {
 								
 								let vars = Scene.vars;
 								
-								let gold = new THREE.Group();
-								gold.add(vars.socle1);
-								gold.add(vars.socle2);
-								gold.add(vars.deer);
-								gold.add(vars.logo);
-								gold.add(vars.texte);
-								gold.add(vars.plaquette);
+								let bronze = new THREE.Group();
+								bronze.add(vars.socle1);
+								bronze.add(vars.socle2);
+								bronze.add(vars.deer);
+								bronze.add(vars.logo);
+								bronze.add(vars.texte);
+								bronze.add(vars.plaquette);
 
 								let logo2 = vars.logo.clone();
 								logo2.rotation.z = Math.PI;
 								logo2.position.x = -45;
 								vars.logo2 = logo2;
-								gold.add(logo2);
-								gold.position.z = -50;
-								gold.position.y = 10;
-								vars.scene.add(gold);
-								vars.goldGroup = gold;
+								bronze.add(logo2);
+								bronze.position.z = -50;
+								bronze.position.y = 10;
+								vars.scene.add(bronze);
+								vars.bronze = bronze;
 
 								let elem = document.querySelector('#loading');
 								elem.parentNode.removeChild(elem);
@@ -419,12 +430,12 @@ const Scene = {
 		
 		// ajout des controles
 		vars.controls = new OrbitControls(vars.camera, vars.renderer.domElement);
-		vars.controls.minDistance = 300;
-		vars.controls.maxDistance = 600;
-		vars.controls.minPolarAngle = Math.PI / 4;
-		vars.controls.maxPolarAngle = Math.PI / 2;
-		vars.controls.minAzimuthAngle = - Math.PI / 4;
-		vars.controls.maxAzimuthAngle = Math.PI / 4;
+		vars.controls.minDistance = 400;
+		vars.controls.maxDistance = 900;
+		// vars.controls.minPolarAngle = Math.PI / 4;
+		// vars.controls.maxPolarAngle = Math.PI / 2;
+		// vars.controls.minAzimuthAngle = - Math.PI / 4;
+		// vars.controls.maxAzimuthAngle = Math.PI / 4;
 		vars.controls.target.set(0, 100, 0);
 		vars.controls.update();
 

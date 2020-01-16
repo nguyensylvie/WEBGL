@@ -197,6 +197,14 @@ const Scene = {
 		Scene.vars.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
 		Scene.vars.mouse.y = -(event.clientY / window.innerHeight ) * 2 + 1;
 	},
+	keyDown: (event) => {
+		const nameTouch = event.key;
+	  
+		if (nameTouch === 'Enter') {
+			alert("Bienvenue");
+		  return;
+		}
+	},
 	init: () => {
 		let vars = Scene.vars;
 
@@ -441,6 +449,8 @@ const Scene = {
 
 		window.addEventListener('resize', Scene.onWindowResize, false);
 		window.addEventListener('mousemove', Scene.onMouseMove, false);
+
+		window.addEventListener('keydown', Scene.keyDown, false);
 
 		vars.stats = new Stats();
 		vars.container.appendChild(vars.stats.dom);

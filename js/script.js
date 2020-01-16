@@ -34,19 +34,6 @@ const Scene = {
 				Scene.vars.animSpeed = -0.05;
 			}
 		}
-
-		//Pour la montgolfiere
-
-		// if (Scene.vars.group1 !== undefined) {
-		// 	let intersects1 = Scene.vars.raycaster.intersectObjects(Scene.vars.group1.children, true);
-
-		// 	if (intersects1.length > 0) {
-		// 		Scene.vars.animSpeed = 0.07;
-		// 	} else {
-		// 		Scene.vars.animSpeed = -0.07;
-		// 	}
-		// }
-
 		Scene.render();
 	},
 	render: () => {
@@ -91,13 +78,12 @@ const Scene = {
 		}
 
 		//Anime montgolfiere qui vole
-		
-		// if (vars.animPercent >= 0.40) {
-		// 	let percent = (vars.animPercent - 0.4) / 0.6;
-		// 	vars.airBalloon.position.y = 50 * percent;
-		// } else if (vars.animPercent < 0.70) {
-		// 	vars.airBalloon.position.y = 0;
-		// }
+		if (vars.animPercent >= 0.20 && vars.animPercent <= 0.55) {
+			let percent = (vars.animPercent - 0.2) / 0.6;
+			vars.balloon.position.y = 800 * percent;
+		} else if (vars.animPercent < 0.20) {
+			vars.balloon.position.y = 0;
+		}
 	},
 	loadFBX: (file, scale, position, rotation, color, namespace, callback) => {
 		let loader = new FBXLoader();
@@ -356,82 +342,75 @@ const Scene = {
 			Scene.vars.text = decodeURI(text);
 		}
 
-		// ajout objet arbre et pommes
+		// ajout objet arbre, pommes, montgolfiere
 		Scene.loadFBX("Tree low.FBX", 2, [0, 0, 20], [0, 0, 0], 0xFFD700, "tree", () => {
 			Scene.loadFBX("apple.FBX", 0.1, [0, 10, 0], [0, 0, 20], 0xF10202, "apple", () => {
-				let vars = Scene.vars;
+				Scene.loadFBX("Air_Balloon.FBX", 0.1, [-600, 0, 100], [0, 0, 0], 0xFABB3E, "balloon", () => {
+		
+					let vars = Scene.vars;
 
-				let trees = new THREE.Group();
-				trees.add(vars.tree);
-				trees.add(vars.apple);
+					let trees = new THREE.Group();
+					trees.add(vars.tree);
+					trees.add(vars.apple);
+					trees.add(vars.balloon);
 
-				trees.position.set(200, 0, 0);
-				trees.rotation.y = -Math.PI / 4;
-				trees.children[0].traverse(node => {
-					if (node.isMesh) {
-						node.material = new THREE.MeshStandardMaterial({
-							color: new THREE.Color(0x9EDD20),
-							metalness: .2,
-							roughness: .3
-						})
-					}
+					trees.position.set(200, 0, 0);
+					trees.rotation.y = -Math.PI / 4;
+					trees.children[0].traverse(node => {
+						if (node.isMesh) {
+							node.material = new THREE.MeshStandardMaterial({
+								color: new THREE.Color(0x9EDD20),
+								metalness: .2,
+								roughness: .3
+							})
+						}
+					});
+					trees.children[2].traverse(node => {
+						if (node.isMesh) {
+							node.material = new THREE.MeshStandardMaterial({
+								color: new THREE.Color(0xFABB3E),
+								metalness: .2,
+								roughness: .3
+							})
+						}
+						});
+
+					let apple2 = vars.apple.clone();
+					apple2.rotation.z = 45;
+					apple2.position.x = 15;
+					apple2.position.y = 200;
+					apple2.position.z = 95;
+					vars.apple2 = apple2;
+					trees.add(apple2);
+
+					let apple3 = vars.apple.clone();
+					apple3.rotation.z = 15;
+					apple3.position.x = 55;
+					apple3.position.y = 150;
+					apple3.position.z = 30;
+					vars.apple3 = apple3;
+					trees.add(apple3);
+
+					let apple4 = vars.apple.clone();
+					apple4.rotation.z = 35;
+					apple4.position.x = -40;
+					apple4.position.y = 180;
+					apple4.position.z = -30;
+					vars.apple4 = apple4;
+					trees.add(apple4);
+					
+					let apple5 = vars.apple.clone();
+					apple5.rotation.z = 90;
+					apple5.position.x = -30;
+					apple5.position.y = 165;
+					apple5.position.z = 85;
+					vars.apple5 = apple5;
+					trees.add(apple5);
+
+					vars.scene.add(trees);
+					vars.group = trees;
 				});
-
-				let apple2 = vars.apple.clone();
-				apple2.rotation.z = 45;
-				apple2.position.x = 15;
-				apple2.position.y = 200;
-				apple2.position.z = 95;
-				vars.apple2 = apple2;
-				trees.add(apple2);
-
-				let apple3 = vars.apple.clone();
-				apple3.rotation.z = 15;
-				apple3.position.x = 55;
-				apple3.position.y = 150;
-				apple3.position.z = 30;
-				vars.apple3 = apple3;
-				trees.add(apple3);
-
-				let apple4 = vars.apple.clone();
-				apple4.rotation.z = 35;
-				apple4.position.x = -40;
-				apple4.position.y = 180;
-				apple4.position.z = -30;
-				vars.apple4 = apple4;
-				trees.add(apple4);
-				
-				let apple5 = vars.apple.clone();
-				apple5.rotation.z = 90;
-				apple5.position.x = -30;
-				apple5.position.y = 165;
-				apple5.position.z = 85;
-				vars.apple5 = apple5;
-				trees.add(apple5);
-
-				vars.scene.add(trees);
-				vars.group = trees;
 			});
-		});
-
-		// ajout objet montgolfiere
-		Scene.loadFBX("Air_Balloon.FBX", 0.1, [0, 0, 0], [0, 0, 0], 0xFABB3E, "balloon", () => {
-			let vars = Scene.vars;
-
-			let airBalloon = new THREE.Group();
-			airBalloon.position.set(-400, 250, -700);
-			airBalloon.add(vars.balloon);
-			airBalloon.traverse(node => {
-			if (node.isMesh) {
-				node.material = new THREE.MeshStandardMaterial({
-					color: new THREE.Color(0xFABB3E),
-					metalness: .2,
-					roughness: .3
-				})
-			}
-			});
-			vars.scene.add(airBalloon);
-			vars.group1 = airBalloon;
 		});
 		
 		// objet cerf et support

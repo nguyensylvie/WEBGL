@@ -16,7 +16,8 @@ const Scene = {
 		raycaster: new THREE.Raycaster(),
 		animSpeed: null,
 		animPercent: 0.00,
-		text: "DAWIN"
+		text: "DAWIN",
+		//objHidden: false
 	},
 	animate: () => {		
 		requestAnimationFrame(Scene.animate);
@@ -205,6 +206,34 @@ const Scene = {
 		  return;
 		}
 	},
+	//Méthode1 permettant de cacher l'objet bronze (cerf, plaquette..)
+
+	keyUp: (event) => {
+		const nomTouche = event.key;
+	  
+		// Dès que l'utilisateur relâche la touche Ctrl, la touche n'est plus active.
+		// Aussi event.ctrlKey est false.
+		if (nomTouche === 'Control') {
+			alert('Le cerf a disparu !');
+			bronze.traverse(function(child) {
+				if (child instanceof THREE.Mesh) {
+					child.visible = false;
+				}
+			});
+		}
+	},
+	//Méthode2 permettant de cacher l'objet bronze (cerf, plaquette..)
+
+	// buttonHide: () => {
+	// 	if(objHidden) {
+	// 		objHidden = true;
+	// 		bronze.visible = false;
+	// 		alert('Le cerf a disparu !');
+	// 	} else {
+	// 		objHidden = false;
+	// 		bronze.visible = true;
+	// 	}
+	// },
 	init: () => {
 		let vars = Scene.vars;
 
@@ -427,6 +456,8 @@ const Scene = {
 								bronze.position.y = 10;
 								vars.scene.add(bronze);
 								vars.bronze = bronze;
+								
+								//bronze.visible = true;
 
 								let elem = document.querySelector('#loading');
 								elem.parentNode.removeChild(elem);
@@ -451,6 +482,9 @@ const Scene = {
 		window.addEventListener('mousemove', Scene.onMouseMove, false);
 
 		window.addEventListener('keydown', Scene.keyDown, false);
+		window.addEventListener('keyup',Scene.keyUp, false);
+
+		//window.getElementById('hideShow').addEventListener('click', Scene.buttonHide, false);
 
 		vars.stats = new Stats();
 		vars.container.appendChild(vars.stats.dom);

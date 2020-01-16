@@ -37,6 +37,10 @@ const Scene = {
 		Scene.render();
 	},
 	render: () => {
+		// Animer la sphère lava (ne fonctionne pas aussi dans la méthode animate)
+		// requestAnimationFrame(Scene.render);
+		// lava.rotation.x += 0.01;
+		// lava.rotation.y += 0.02;
 		Scene.vars.renderer.render(Scene.vars.scene, Scene.vars.camera);
 		Scene.vars.stats.update();
 	},
@@ -236,8 +240,6 @@ const Scene = {
 		light1.shadow.mapSize.width = 4096;
 		light1.shadow.mapSize.height = 4096;
 		vars.scene.add(light1);
-		// let helper = new THREE.DirectionalLightHelper(light1, 5);
-		// vars.scene.add(helper);
 
 		let light2 = new THREE.DirectionalLight(0xFFFFFF, lightIntensity);
 		light2.position.set(-400, 200, 400);
@@ -250,8 +252,6 @@ const Scene = {
 		light2.shadow.mapSize.width = 4096;
 		light2.shadow.mapSize.height = 4096;
 		vars.scene.add(light2);
-		// let helper2 = new THREE.DirectionalLightHelper(light2, 5);
-		// vars.scene.add(helper2);
 
 		let light3 = new THREE.DirectionalLight(0xFFFFFF, lightIntensity);
 		light3.position.set(400, 200, 400);
@@ -264,8 +264,6 @@ const Scene = {
 		light3.shadow.mapSize.width = 4096;
 		light3.shadow.mapSize.height = 4096;
 		vars.scene.add(light3);
-		// let helper3 = new THREE.DirectionalLightHelper(light3, 5);
-		// vars.scene.add(helper3);
 
 		// ajout du sol
 		let mesh = new THREE.Mesh(
@@ -288,12 +286,6 @@ const Scene = {
 		shadowPlane.receiveShadow = true;
 
 		vars.scene.add(shadowPlane);
-
-		// ajout de la texture helper du sol
-		// let grid = new THREE.GridHelper(2000, 20, 0x000000, 0x000000);
-		// grid.material.opacity = 0.2;
-		// grid.material.transparent = true;
-		// vars.scene.add(grid);
 
 		// ajout de la sphère
 		let geometry = new THREE.SphereGeometry(1000, 32, 32);
@@ -373,6 +365,8 @@ const Scene = {
 				vars.group = trees;
 			});
 		});
+
+
 
 		Scene.loadFBX("Air_Balloon.FBX", 0.1, [0, 0, 0], [0, 0, 0], 0xFABB3E, "balloon", () => {
 			let vars = Scene.vars;

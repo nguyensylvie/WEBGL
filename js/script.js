@@ -224,7 +224,7 @@ const Scene = {
 	},
 	//Méthode2 permettant de cacher l'objet bronze (cerf, plaquette..)
 
-	// buttonHide: () => {
+	// buttonHide: (bronze) => {
 	// 	if(objHidden) {
 	// 		objHidden = true;
 	// 		bronze.visible = false;
@@ -335,13 +335,18 @@ const Scene = {
 		material.side = THREE.DoubleSide;
 		let sphere = new THREE.Mesh(geometry, material);
 		vars.scene.add(sphere);
-
+			
 		// ajout de la sphere lava
-		var geometry1 = new THREE.SphereGeometry(150, 25, 32);
-		var material1 = new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture('/texture/lava.jpg'), overdraw: true});
-		let lava = new THREE.Mesh(geometry1, material1);
-		lava.position.set(200, 450, -1000);
-		vars.scene.add(lava);
+		for(var i = 0; i < 3; i++){
+			var geometry1 = new THREE.SphereGeometry(150, 25, 32);
+			var material1 = new THREE.MeshBasicMaterial({map: new THREE.ImageUtils.loadTexture('/texture/lava.jpg'), overdraw: true});
+			let lava = new THREE.Mesh(geometry1, material1);
+			var distance = 800;
+			lava.position.x = Math.random() * distance * 2 - distance;
+			lava.position.y = 400;
+			lava.position.z = -1000;
+			vars.scene.add(lava);
+		}
 
 		vars.texture = new THREE.TextureLoader().load('./texture/marbre.jpg');
 

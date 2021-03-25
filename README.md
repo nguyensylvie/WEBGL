@@ -1,6 +1,6 @@
 # WEBGL
 
-Dans cette scène ce trouve des objets FBX (arbre, pommes, montgolfière, cerf).
+Dans cette scène se trouve des objets FBX (arbre, pommes, montgolfière, cerf).
 Lorsque l'on passe la souris sur l'arbre ou la montgolfière, les pommes tombent et la montgolfère vole.
 Lorsque l'on clique sur le bouton "entrée", un message d'alerte s'affiche.
 
